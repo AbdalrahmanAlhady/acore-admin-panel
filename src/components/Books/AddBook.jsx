@@ -26,7 +26,7 @@ import { useEffect, useState } from "react";
 import EmptyBookCover from "../shared/emptyBookCover";
 import { FormSelect } from "../shared/formSelectField";
 import { FormTextField } from "../shared/formTextField";
-import { FileUpload } from "@mui/icons-material";
+import FileUpload from "../shared/fileUploadField";
 
 const categories = ["Fiction", "Non-Fiction", "Science", "History"];
 const versions = ["1.0", "1.1", "2.0"];
