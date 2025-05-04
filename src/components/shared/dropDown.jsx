@@ -4,15 +4,13 @@ import MenuItem from "@mui/material/MenuItem";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function DropDown({ text }) {
-  const [email, setEmail] = useState("");
+export default function DropDown({ text, email }) {
+
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
 
-  useEffect(() => {
-    setEmail(JSON.parse(localStorage.getItem("email")));
-  }, []);
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -20,6 +18,7 @@ export default function DropDown({ text }) {
     setAnchorEl(null);
   };
   const handleLogout = () => {
+    setAnchorEl(null);
     localStorage.clear();
     navigate("/login");
   };

@@ -17,18 +17,19 @@ import { Edit } from "@mui/icons-material";
 import { Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import TablePagination from "@mui/material/TablePagination";
-import { getBooks, searchBooks } from "./books.service";
+import { getBooks, saveBooks, searchBooks } from "./books.service";
 import { TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
 import { bookStore } from "./booksStore";
 import DeleteModal from "../shared/deleteModal";
+import defaultBooks from "../../data/defaultBooks";
 
 export default function Books() {
   const [booksData, setBooksData] = useState({ books: [], count: 0 });
   const [page, setPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     setBooksData(getBooks(newPage, 4));
@@ -41,6 +42,11 @@ export default function Books() {
     setSearchQuery(() => "");
     setBooksData(getBooks(page, 4));
   };
+  useEffect(() => {
+    //load default books
+    const booksData = getBooks();
+    if (booksData.books.length === 0) saveBooks(defaultBooks);
+  }, );
   useEffect(() => {
     if (Books.length === 0) {
       setBooksData(getBooks(0, 4));
@@ -122,47 +128,52 @@ export default function Books() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {booksData.books.length>0 && booksData.books.map((book) => (
-                <TableRow
-                  key={book.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell align="left">{book.title}</TableCell>
-                  <TableCell align="left">{book.category}</TableCell>
-                  <TableCell align="left">{book.author}</TableCell>
-                  <TableCell align="left">{book.isbn}</TableCell>
-                  <TableCell align="left">{book.version}</TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      aria-label="view"
-                      onClick={() => {
-                        navigate(`/bookDetails/${book.id}`);
-                      }}
-                    >
-                      <Visibility />
-                    </IconButton>
-                    <IconButton
-                      aria-label="edit"
-                      onClick={() => {
-                        navigate(`/editBook/${book.id}`);
-                      }}
-                    >
-                      <Edit />
-                    </IconButton>
-                    <DeleteModal
-                      bookId={book.id}
-                      triggerButton={
-                        <IconButton aria-label="delete">
-                          <Delete />
-                        </IconButton>
-                      }
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {booksData.books.length > 0 &&
+                booksData.books.map((book) => (
+                  <TableRow
+                    key={book.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="left">{book.title}</TableCell>
+                    <TableCell align="left">{book.category}</TableCell>
+                    <TableCell align="left">{book.author}</TableCell>
+                    <TableCell align="left">{book.isbn}</TableCell>
+                    <TableCell align="left">{book.version}</TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        aria-label="view"
+                        onClick={() => {
+                          navigate(`/bookDetails/${book.id}`);
+                        }}
+                      >
+                        <Visibility />
+                      </IconButton>
+                      <IconButton
+                        aria-label="edit"
+                        onClick={() => {
+                          navigate(`/editBook/${book.id}`);
+                        }}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <DeleteModal
+                        bookId={book.id}
+                        triggerButton={
+                          <IconButton aria-label="delete">
+                            <Delete />
+                          </IconButton>
+                        }
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               {booksData.books.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} align="center" className="h-40 !text-xl !text-blue-700" >
+                  <TableCell
+                    colSpan={6}
+                    align="center"
+                    className="h-40 !text-xl !text-blue-700"
+                  >
                     No books found
                   </TableCell>
                 </TableRow>
